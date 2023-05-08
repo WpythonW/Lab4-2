@@ -7,7 +7,7 @@ using namespace std;
 double P(double x) {
     if (x != 0)
         //return -x;
-        return -(2 * x + 4) / (x * (x + 4));
+        return -(2.0 * x + 4.0) / (x * (x + 4.0));
     else
         return 0.5; //взял lim x->0
 }
@@ -59,24 +59,24 @@ vector<vector<double>> Generate3DiagMatrix(int N, std::vector<double> X, double 
     //Matr[0][1] = -1 + h * h * Q(X[0]) - 1/2 * P(X[0]);
     //Matr[0][2] = 1 + 1/2 * P(X[0]);
 
-    Matr[0][0] = 0;
-    Matr[0][1] = -1;
-    Matr[0][2] = 1;
+    Matr[0][0] = 0.0;
+    Matr[0][1] = -1.0;
+    Matr[0][2] = 1.0;
     // 
     //Matr[0][0] = 0;
     //Matr[0][1] = -2.04;
     //Matr[0][2] = 1.02;
 
     for (int row = 1; row < N - 1; row++) {
-        Matr[row][0] = 1 - P(X[row]) * h / 2;
-        Matr[row][1] = -2 + h * h * Q(X[row]);
-        Matr[row][2] = 1 + P(X[row]) * h / 2;
+        Matr[row][0] = 1.0 - P(X[row]) * h / 2;
+        Matr[row][1] = -2.0 + h * h * Q(X[row]);
+        Matr[row][2] = 1.0 + P(X[row]) * h / 2.0;
         //cout << X[row] << endl;
     }
 
-    Matr[N - 1][0] = -2; 
-    Matr[N - 1][1] = h + 2; 
-    Matr[N - 1][2] = 0;
+    Matr[N - 1][0] = -2.0; 
+    Matr[N - 1][1] = h + 2.0; 
+    Matr[N - 1][2] = 0.0;
 
     //Matr[N - 1][0] = 1;
     //Matr[N - 1][1] = -1.4;
@@ -93,18 +93,14 @@ std::vector<double> tridiagonalSolve(const std::vector<double>& b, const std::ve
     std::vector<double> y(n);
 
     // Проверка условия диагонального преобладания
-    /*for (int i = 0; i < n; i++) {
-        double sum = 0;
-        for (int j = 0; j < Matr[i].size(); j++) {
-            if (i != j + i - 1) {
-                sum += std::abs(Matr[i][j]);
-            }
-        }
-        if (std::abs(Matr[i][1]) <= sum) {
+    for (int i = 0; i < n; i++) {
+        double sum = abs(Matr[i][0]) + abs(Matr[i][1]);
+        if (abs(Matr[i][2]) > sum) {
+            cout << Matr[i][0] << " " << Matr[i][1] << " " << Matr[i][2] << endl;
             std::cerr << "Matrix doesn't meet conditions of diagonal supersion" << std::endl;
             return y;
         }
-    }*/
+    }
 
     alpha[0] = -Matr[0][2] / Matr[0][1];
     beta[0] = b[0] / Matr[0][1];
@@ -128,7 +124,7 @@ std::vector<double> tridiagonalSolve(const std::vector<double>& b, const std::ve
 int main() {
     double start = 0.0;
     double end = 2.0;
-    double h = 0.01;
+    double h = 0.0001;
     int N = (end - start) / h;
 
     std::vector<double> X;
@@ -145,6 +141,7 @@ int main() {
 
     std::vector<double> Y = tridiagonalSolve(B, Matr);
 
+    cout << "Y values: " << endl;
     prVect(Y);
 
     return 0;
